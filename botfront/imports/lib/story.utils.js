@@ -79,14 +79,14 @@ export const appendBranchCheckpoints = (nLevelStory, remainder = '') => ({
     ...nLevelStory,
     story: (nLevelStory.branches && nLevelStory.branches.length)
         ? `${nLevelStory.story || ''}\n\
-> ${remainder ? `${remainder.replace(' ', '_')}__` : ''}${nLevelStory.title.replace(' ', '_')}__branches`
+> ${remainder ? `${remainder.replace(/ /g, '_')}__` : ''}${nLevelStory.title.replace(/ /g, '_')}__branches`
         : nLevelStory.story || '',
     title: `${remainder ? `${remainder}__` : ''}${nLevelStory.title}`,
     branches: (nLevelStory.branches && nLevelStory.branches.length)
         ? nLevelStory.branches.map(n1LevelStory => (
             appendBranchCheckpoints({
                 ...n1LevelStory,
-                story: `> ${remainder ? `${remainder.replace(' ', '_')}__` : ''}${nLevelStory.title.replace(' ', '_')}__branches\n\
+                story: `> ${remainder ? `${remainder.replace(/ /g, '_')}__` : ''}${nLevelStory.title.replace(/ /g, '_')}__branches\n\
 ${n1LevelStory.story || ''}`,
             }, `${remainder ? `${remainder}__` : ''}${nLevelStory.title}`)
         ))
@@ -382,7 +382,7 @@ export const aggregateEvents = (parentStory, update = {}) => {
     let events = [];
     const traverseBranches = (incommingStory) => {
         const story = incommingStory._id === update._id ? { ...incommingStory, ...update } : incommingStory;
-        events = Array.from(new Set([...events, ...getStoryEvents(story.story)]))
+        events = Array.from(new Set([...events, ...getStoryEvents(story.story)]));
         // events = [...events, ...getStoryEvents(story.story, events)];
         if (story.branches) {
             story.branches.forEach(branch => traverseBranches(branch));
